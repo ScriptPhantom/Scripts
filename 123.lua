@@ -2,7 +2,12 @@ if game.PlaceId == 6403373529 then
     local teleportFunc = queueonteleport or queue_on_teleport or syn and syn.queue_on_teleport
     if teleportFunc then
         teleportFunc([[
-            -- script code here
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+repeat task.wait() until game.Players.LocalPlayer
+wait(0.25)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptPhantom/Scripts/refs/heads/main/123.lua"))()
         ]])
     end
 
