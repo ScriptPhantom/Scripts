@@ -19,7 +19,7 @@ local function checkGloveForGod()
         if leaderstats then
             local gloveValue = leaderstats:FindFirstChild("Glove")
             -- Проверяем, если Glove существует и содержит "God"
-            if gloveValue and string.match(gloveValue.Value, "God's Hand") then
+            if gloveValue and string.match(gloveValue.Value, "God") then
                 foundGod = true
                 break
             end
@@ -28,10 +28,10 @@ local function checkGloveForGod()
     return foundGod
 end
 
--- Если ни у кого нет Glove с "God", телепортируемся на другой сервер
-if not checkGloveForGod() then
-    -- Получаем список серверов
+local function teleportToAvailableServer()
     local serverList = {}
+    
+    -- Получаем список серверов
     for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
         -- Проверяем, если сервер не заполнен
         if v.playing and type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
@@ -39,14 +39,19 @@ if not checkGloveForGod() then
         end
     end
     
-    -- Телепортируемся на не заполненный сервер, если "God" не найдено у всех игроков
+    -- Если есть свободные сервера, телепортируемся
     if #serverList > 0 then
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverList[math.random(1, #serverList)])
     else
         warn("No available servers found for teleportation.")
     end
-else
-    -- Если "God" найдено хотя бы у одного игрока, выполняем основной скрипт
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Giangplay/Slap_Battles/main/File/Farm%20Bob.lua"))()
 end
 
+-- Если ни у кого нет Glove с "God", продолжаем телепортироваться, пока не телепортируемся успешно
+while not checkGloveForGod() do
+    teleportToAvailableServer()
+    wait(5) -- Ждем 5 секунд перед следующей попыткой (можно изменить по необходимости)
+end
+
+-- Если "God" найдено хотя бы у одного игрока, выводим сообщение
+print('НАШЕЛ БОГА!')
