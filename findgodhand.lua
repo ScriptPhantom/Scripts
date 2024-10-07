@@ -19,7 +19,7 @@ local function checkGloveForGod()
         if leaderstats then
             local gloveValue = leaderstats:FindFirstChild("Glove")
             -- Проверяем, если Glove существует и содержит "God"
-            if gloveValue and string.match(gloveValue.Value, "God") then
+            if gloveValue and string.match(gloveValue.Value, "God's Hand") then
                 foundGod = true
                 break
             end
