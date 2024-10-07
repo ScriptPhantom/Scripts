@@ -42,7 +42,7 @@ local function teleportToAvailableServer()
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverList[math.random(1, #serverList)])
         return true -- Успешная телепортация
     else
-        warn("No available servers found for teleportation.")
+        -- Просто продолжаем, если серверов нет
         return false -- Не удалось телепортироваться
     end
 end
