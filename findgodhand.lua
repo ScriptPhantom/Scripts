@@ -31,8 +31,8 @@ local function teleportToAvailableServer()
 
     -- Получаем список серверов
     for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
-        -- Проверяем, если сервер не заполнен
-        if v.playing and type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+        -- Проверяем, если сервер имеет 13, 14 или 15 игроков и не заполнен
+        if v.playing and type(v) == "table" and v.maxPlayers > v.playing and v.playing >= 13 and v.playing <= 15 and v.id ~= game.JobId then
             serverList[#serverList + 1] = v.id
         end
     end
@@ -97,6 +97,3 @@ if checkGloveForGod() then
         game:GetService("StarterGui"):SetCore("SendNotification", {Title = "[ Giang ]", Text = "📢 [ You Got Badge Bob, Meaning you already have Bob ] 🇻🇳.", Icon = "rbxassetid://7733658504", Duration = 10})
     end
 end
-
-
-
