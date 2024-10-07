@@ -40,10 +40,6 @@ local function teleportToAvailableServer()
     -- Если есть свободные сервера, телепортируемся
     if #serverList > 0 then
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverList[math.random(1, #serverList)])
-        return true -- Успешная телепортация
-    else
-        -- Просто продолжаем, если серверов нет
-        return false -- Не удалось телепортироваться
     end
 end
 
@@ -90,10 +86,14 @@ if checkGloveForGod() then
         end
 
         wait(0.4)
-        for i = 1, 4000 do
-            game:GetService("ReplicatedStorage").Duplicate:FireServer(true)
-        end
+        -- Выполняем дублирование
+        game:GetService("ReplicatedStorage").Duplicate:FireServer(true)
+
+        -- Пытаемся телепортироваться на серверы после выполнения дублирования
+        wait(0.4)
+        teleportToAvailableServer()
     else
         game:GetService("StarterGui"):SetCore("SendNotification", {Title = "[ Giang ]", Text = "📢 [ You Got Badge Bob, Meaning you already have Bob ] 🇻🇳.", Icon = "rbxassetid://7733658504", Duration = 10})
     end
 end
+
