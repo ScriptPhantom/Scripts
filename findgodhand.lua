@@ -7,7 +7,7 @@ if game.PlaceId == 6403373529 then
         end
         repeat task.wait() until game.Players.LocalPlayer
         wait(0.25)
-        loadstring(game:HttpGet("https://your-raw-script-url-here"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ScriptPhantom/Scripts/refs/heads/main/findgodhand.lua"))()
         ]])
     end
 end
