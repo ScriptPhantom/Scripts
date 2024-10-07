@@ -50,8 +50,49 @@ end
 -- Если ни у кого нет Glove с "God", продолжаем телепортироваться, пока не телепортируемся успешно
 while not checkGloveForGod() do
     teleportToAvailableServer()
-    wait(5) -- Ждем 5 секунд перед следующей попыткой (можно изменить по необходимости)
+    wait(5) -- Ждем 5 секунд перед следующей попыткой
 end
 
--- Если "God" найдено хотя бы у одного игрока, выводим сообщение
+-- Если "God" найдено хотя бы у одного игрока, выполняем указанный скрипт
 print('НАШЕЛ БОГА!')
+
+if not game:GetService("BadgeService"):UserHasBadgeAsync(game.Players.LocalPlayer.UserId, 2125950512) then
+    game:GetService("StarterGui"):SetCore("SendNotification", {Title = "[ Giang ]", Text = "📢 [ You have not issued Bob, and not badge bob ] 🇻🇳.", Icon = "rbxassetid://7733658504", Duration = 10})
+    fireclickdetector(workspace.Lobby.Replica.ClickDetector)
+    wait(0.25)
+    firetouchinterest(game.Players.LocalPlayer.Character:WaitForChild("Head"), workspace.Lobby.Teleport1.TouchInterest.Parent, 0)
+    firetouchinterest(game.Players.LocalPlayer.Character:WaitForChild("Head"), workspace.Lobby.Teleport1.TouchInterest.Parent, 1)
+    wait(0.4)
+
+    if _G.SlappleFarm == true then
+        if game.Players.LocalPlayer.Character:FindFirstChild("entered") then
+            for i, v in pairs(workspace.Arena.island5.Slapples:GetChildren()) do
+                if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:FindFirstChild("entered") and (v.Name == "Slapple" or v.Name == "GoldenSlapple") and v:FindFirstChild("Glove") and v.Glove:FindFirstChildWhichIsA("TouchTransmitter") then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Glove, 0)
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Glove, 1)
+                end
+            end
+        end
+    end
+
+    if _G.CandyFarm == true then
+        for i, v in pairs(game.Workspace.CandyCorns:GetChildren()) do
+            if game.Players.LocalPlayer.Character:FindFirstChild("Head") and v:FindFirstChildWhichIsA("TouchTransmitter") then
+                firetouchinterest(game.Players.LocalPlayer.Character.Head, v, 0)
+                firetouchinterest(game.Players.LocalPlayer.Character.Head, v, 1)
+            end
+        end
+    end
+
+    wait(0.4)
+    for i = 1, 4000 do
+        game:GetService("ReplicatedStorage").Duplicate:FireServer(true)
+    end
+
+    wait(0.4)
+    
+    -- Телепортация снова после 4000 раз
+    teleportToAvailableServer()
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {Title = "[ Giang ]", Text = "📢 [ You Got Badge Bob, Meaning you already have Bob ] 🇻🇳.", Icon = "rbxassetid://7733658504", Duration = 10})
+end
