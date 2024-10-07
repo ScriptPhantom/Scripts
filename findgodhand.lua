@@ -33,12 +33,13 @@ if not checkGloveForGod() then
     -- Получаем список серверов
     local serverList = {}
     for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+        -- Проверяем, если сервер не заполнен
         if v.playing and type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
             serverList[#serverList + 1] = v.id
         end
     end
     
-    -- Телепортируемся на другой сервер, если "God" не найдено у всех игроков
+    -- Телепортируемся на не заполненный сервер, если "God" не найдено у всех игроков
     if #serverList > 0 then
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverList[math.random(1, #serverList)])
     else
@@ -48,3 +49,4 @@ else
     -- Если "God" найдено хотя бы у одного игрока, выполняем основной скрипт
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Giangplay/Slap_Battles/main/File/Farm%20Bob.lua"))()
 end
+
