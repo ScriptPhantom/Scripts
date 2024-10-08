@@ -33,21 +33,27 @@ local function teleportToAvailableServer()
     local servers = game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data
     for _, v in ipairs(servers) do
         -- Check if the server is available
-        if v.playing and v.maxPlayers > v.playing and v.playing >= 5 and v.playing <= 13 and v.id ~= game.JobId then
-            table.insert(serverList, v.id)
+        if v.playing and type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+            serverList[#serverList + 1] = v.id
         end
     end
 
     -- Teleport to an available server if any
     if #serverList > 0 then
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverList[math.random(1, #serverList)])
+        return true -- Indicate a successful teleportation
     end
+    return false -- No servers to teleport to
 end
 
 -- Check for "God" and teleport if not found
 if not checkGloveForGod() then
     print('Бога не найдено, телепортируемся на другой сервер...')
-    teleportToAvailableServer()
+    if teleportToAvailableServer() then
+        print('Успешный телепортация на другой сервер.')
+    else
+        print('Нет доступных серверов для телепортации.')
+    end
 else
     print('НАШЕЛ БОГА!')
     
