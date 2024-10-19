@@ -4975,20 +4975,55 @@ end
 })
 
 Tab7:AddToggle({
-	Name = "Autofarm Candy",
-	Default = false,
-	Callback = function(Value)
-	    CandyCornsFarm = Value
-while CandyCornsFarm do
-for i, v in pairs(game.Workspace.CandyCorns:GetChildren()) do
-                if game.Players.LocalPlayer.Character:FindFirstChild("Head") and v:FindFirstChildWhichIsA("TouchTransmitter") then
-                    firetouchinterest(game.Players.LocalPlayer.Character.Head, v, 0)
-                    firetouchinterest(game.Players.LocalPlayer.Character.Head, v, 1)
-                end
+    Name = "Autofarm Candy",
+    Default = false,
+    Callback = function(Value)
+        CandyCornsFarm = Value
+        
+        if CandyCornsFarm then
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local safeBoxPosition = workspace.SafeBox.S5.Position
+            local collectedParts = {} -- Таблица для хранения собранных частей
+
+            -- Функция для телепортации персонажа
+            local function teleportTo(part)
+                character:SetPrimaryPartCFrame(part.CFrame)
+                wait(0.4)
+                character:SetPrimaryPartCFrame(CFrame.new(safeBoxPosition))
             end
-task.wait()
-end
-	end    
+
+            -- Событие для обработки появления новых частей
+            local childAddedConnection
+            childAddedConnection = workspace.CandyCorns.ChildAdded:Connect(function(part)
+                if part:IsA("Part") and not collectedParts[part] then
+                    -- Телепортируемся к новой части
+                    teleportTo(part)
+
+                    -- Добавляем часть в таблицу собранных частей
+                    collectedParts[part] = true
+                end
+            end)
+
+            -- Событие для обработки исчезновения частей
+            local childRemovedConnection
+            childRemovedConnection = workspace.CandyCorns.ChildRemoved:Connect(function(part)
+                if collectedParts[part] then
+                    -- Удаляем часть из собранных, когда она исчезает
+                    collectedParts[part] = nil
+                end
+            end)
+
+            -- Главный цикл для проверки состояния
+            while CandyCornsFarm do
+                wait(0.1) -- Небольшая задержка, чтобы не нагружать CPU
+            end
+            
+            -- Отключаем события, когда скрипт останавливается
+            childAddedConnection:Disconnect()
+            childRemovedConnection:Disconnect()
+        end
+    end
 })
 
 Tab7:AddTextbox({
